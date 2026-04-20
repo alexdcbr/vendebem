@@ -1,7 +1,3 @@
-Perfeito — segue o **README.md completo**, pronto para você copiar e colar no seu repositório (arquivo `README.md`):
-
----
-
 ```markdown
 # 🛒 Sistema de Vendas Web (PHP + MySQL)
 
@@ -267,3 +263,5 @@ Desenvolvido como projeto prático para aprendizado de desenvolvimento web.
 ## 📄 Licença
 
 Uso livre para fins educacionais.
+
+```
