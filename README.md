@@ -1,28 +1,33 @@
+Perfeito — segue o **README.md completo**, pronto para você copiar e colar no seu repositório (arquivo `README.md`):
+
+---
+
+```markdown
 # 🛒 Sistema de Vendas Web (PHP + MySQL)
 
-Projeto de um sistema de vendas web desenvolvido em **PHP puro e MySQL**, com foco em aprendizado prático e evolução progressiva até um **mini e-commerce completo com painel administrativo**.
+Projeto de um sistema de vendas web desenvolvido em **PHP puro e MySQL**, com foco em aprendizado prático e evolução progressiva até um **mini e-commerce completo com painel administrativo e dashboard BI**.
 
 ---
 
 ## 📌 Objetivo
 
-Construir um sistema completo de vendas inspirado em um modelo desktop (Delphi), adaptado para ambiente web, aplicando boas práticas de desenvolvimento e arquitetura.
+Construir um sistema completo de vendas inspirado em aplicações desktop, adaptado para ambiente web, aplicando boas práticas de desenvolvimento, autenticação, controle de acesso e visualização de dados.
 
 ---
 
 ## 🚀 Funcionalidades
 
-### 👤 Cliente
+### 👤 Área do Cliente
 - Cadastro de usuário
-- Login com autenticação segura
-- Completar cadastro (onboarding obrigatório)
-- Navegação de produtos (loja/vitrine)
+- Login com autenticação segura (password_hash)
+- Onboarding (completar cadastro obrigatório)
+- Navegação de produtos (loja)
 - Carrinho de compras
 - Alterar quantidade de itens
 - Remover itens do carrinho
 - Checkout completo
 - Simulação de pagamento:
-  - PIX (com QR Code)
+  - PIX (QR Code)
   - Cartão de crédito
 - Histórico de compras
 
@@ -30,9 +35,9 @@ Construir um sistema completo de vendas inspirado em um modelo desktop (Delphi),
 
 ### 🛍️ E-commerce
 - Vitrine de produtos com imagens
-- Cards modernos e responsivos
+- Cards responsivos e modernos
 - Controle de estoque automático
-- Baixa e reposição de estoque
+- Baixa de estoque na venda
 - Fluxo completo de compra
 
 ---
@@ -42,7 +47,7 @@ Construir um sistema completo de vendas inspirado em um modelo desktop (Delphi),
   - Cliente
   - Administrador
 - Proteção de rotas
-- Menu dinâmico por perfil
+- Menu dinâmico por tipo de usuário
 
 ---
 
@@ -53,7 +58,7 @@ Construir um sistema completo de vendas inspirado em um modelo desktop (Delphi),
 
 ---
 
-### 📊 Dashboard (BI)
+### 📊 Dashboard BI
 - KPIs:
   - Total de pedidos
   - Faturamento
@@ -72,11 +77,13 @@ Construir um sistema completo de vendas inspirado em um modelo desktop (Delphi),
 - HTML5
 - CSS3
 - JavaScript
-- Chart.js (gráficos)
+- Chart.js
 
 ---
 
 ## 📂 Estrutura do Projeto
+
+```
 
 /public
 ├── index.php
@@ -93,6 +100,10 @@ Construir um sistema completo de vendas inspirado em um modelo desktop (Delphi),
 ├── css/
 └── partials/
 
+/config
+└── database.php
+
+````
 
 ---
 
@@ -101,13 +112,32 @@ Construir um sistema completo de vendas inspirado em um modelo desktop (Delphi),
 ### 1. Clonar o projeto
 
 ```bash
-git clone https://github.com/seu-usuario/seu-repo.git
-2. Configurar ambiente
-Utilize:
-Laragon / XAMPP / WAMP
-3. Criar banco de dados
+git clone https://github.com/seu-usuario/seu-repositorio.git
+````
+
+---
+
+### 2. Configurar ambiente
+
+Use um servidor local como:
+
+* Laragon
+* XAMPP
+* WAMP
+
+---
+
+### 3. Criar banco de dados
+
+```sql
 CREATE DATABASE sistema_vendas;
-4. Importar tabelas principais
+```
+
+---
+
+### 4. Criar tabelas
+
+```sql
 CREATE TABLE clientes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100),
@@ -151,83 +181,89 @@ CREATE TABLE carrinho (
     produto_id INT,
     quantidade INT
 );
-5. Configurar conexão
+```
 
-Arquivo:
+---
 
+### 5. Configurar conexão
+
+Editar o arquivo:
+
+```
 /config/database.php
-6. Executar
+```
 
-Acesse:
+---
 
+### 6. Executar o sistema
+
+Acesse no navegador:
+
+```
 http://localhost/sistema-vendas/public/
-🔐 Usuário Admin
+```
+
+---
+
+## 🔐 Usuário Administrador
 
 Defina manualmente no banco:
 
+```sql
 UPDATE clientes 
 SET tipo = 'admin' 
 WHERE id = 1;
-📈 Roadmap / Melhorias Futuras
- Integração com gateway de pagamento (Mercado Pago / Stripe)
- Frete e cálculo automático
- Endereço com CEP automático
- Upload múltiplo de imagens
- Sistema de cupons
- Avaliação de produtos
- API REST
- Autenticação JWT
-🧠 Aprendizados
-
-Este projeto aborda:
-
-CRUD completo
-Sessões e autenticação
-Controle de acesso (RBAC)
-Modelagem de banco
-Fluxo de e-commerce
-Dashboard com BI
-Integração frontend + backend
-📌 Status do Projeto
-
-🚧 Em evolução contínua (projeto educacional)
-
-👨‍💻 Autor
-
-Projeto desenvolvido para fins de aprendizado e evolução em desenvolvimento web.
-
-📄 Licença
-
-Este projeto é de uso livre para estudos.
-
+```
 
 ---
 
-# 🧠 RESULTADO
+## 🔄 Fluxo do Sistema
 
-Você agora tem:
-
-✔ README profissional  
-✔ Estrutura de projeto clara  
-✔ Documentação pronta para GitHub  
-✔ Padrão de mercado  
+```
+Cadastro → Login → Completar Cadastro → Loja → Carrinho → Checkout → Pagamento → Pedido
+```
 
 ---
 
-# 🚀 PRÓXIMO PASSO (OPCIONAL)
+## 📈 Roadmap (Melhorias Futuras)
 
-Se quiser elevar ainda mais:
-
-- README com imagens do sistema
-- GIF demonstrando fluxo
-- Deploy online (Heroku / VPS)
+* [ ] Integração com pagamento real (Stripe / Mercado Pago)
+* [ ] Frete automático
+* [ ] Endereço com CEP automático
+* [ ] Upload múltiplo de imagens
+* [ ] Avaliação de produtos
+* [ ] API REST
+* [ ] Autenticação JWT
+* [ ] Painel administrativo avançado
 
 ---
 
-# 👉 Me diga:
+## 🧠 Aprendizados
 
-- **“Quero adicionar prints no README”**
-- **“Quero subir esse projeto online”**
-- **“Quero transformar em portfólio profissional”**
+Este projeto cobre:
 
-Agora seu projeto já está com **cara de produto real no GitHub** 🚀
+* CRUD completo
+* Sessões e autenticação
+* Controle de acesso (RBAC)
+* Modelagem de banco de dados
+* Fluxo de e-commerce
+* Dashboard com BI
+* Integração frontend + backend
+
+---
+
+## 📌 Status do Projeto
+
+🚧 Em desenvolvimento contínuo (projeto educacional)
+
+---
+
+## 👨‍💻 Autor
+
+Desenvolvido como projeto prático para aprendizado de desenvolvimento web.
+
+---
+
+## 📄 Licença
+
+Uso livre para fins educacionais.
