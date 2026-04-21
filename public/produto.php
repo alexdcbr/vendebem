@@ -11,8 +11,13 @@ if (!isset($_SESSION['cliente_id'])) {
 $id = $_GET['id'] ?? 0;
 $cliente_id = $_SESSION['cliente_id'];
 
-// 🔹 Produto
-$produto = $conn->query("SELECT * FROM produtos WHERE id = $id")->fetch_assoc();
+// 🔹 Produto + categoria
+$produto = $conn->query("
+    SELECT produtos.*, categorias.nome AS categoria_nome 
+    FROM produtos
+    LEFT JOIN categorias ON produtos.categoria_id = categorias.id
+    WHERE produtos.id = $id
+")->fetch_assoc();
 
 if (!$produto) {
     echo "<p>Produto não encontrado</p>";
@@ -25,7 +30,7 @@ $avaliacaoExistente = $conn->query("
     WHERE produto_id = $id AND cliente_id = $cliente_id
 ")->fetch_assoc();
 
-// 🔹 Salvar avaliação (INSERT ou UPDATE)
+// 🔹 Salvar avaliação
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $nota = $_POST['nota'];
@@ -52,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     exit;
 }
 
-// 🔹 Lista avaliações
+// 🔹 Avaliações
 $avaliacoes = $conn->query("
     SELECT avaliacoes.*, clientes.nome 
     FROM avaliacoes
@@ -66,13 +71,22 @@ $media = $conn->query("
     FROM avaliacoes 
     WHERE produto_id = $id
 ")->fetch_assoc()['media'] ?? 0;
+
+// 🔥 Produtos relacionados (mesma categoria)
+$relacionados = $conn->query("
+    SELECT * FROM produtos 
+    WHERE categoria_id = {$produto['categoria_id']} 
+    AND id != $id
+    LIMIT 4
+");
 ?>
 
 <div class="card">
 
+    <!-- 🔥 PRODUTO -->
     <div style="display:flex; gap:30px; flex-wrap:wrap;">
 
-        <!-- 🔥 IMAGEM -->
+        <!-- IMAGEM -->
         <div style="flex:1; min-width:300px; text-align:center;">
             <div style="
                 height:300px;
@@ -91,10 +105,12 @@ $media = $conn->query("
             </div>
         </div>
 
-        <!-- 🔥 DETALHES -->
+        <!-- DETALHES -->
         <div style="flex:1; min-width:300px;">
 
             <h1><?= $produto['nome'] ?></h1>
+
+            <p><b>Categoria:</b> <?= $produto['categoria_nome'] ?? 'Sem categoria' ?></p>
 
             <h2 style="color:#27ae60;">
                 R$ <?= number_format($produto['valor'], 2, ',', '.') ?>
@@ -123,7 +139,7 @@ $media = $conn->query("
 
     <hr>
 
-    <!-- 🔥 FORM -->
+    <!-- 🔥 FORM AVALIAÇÃO -->
     <h3>
         <?= $avaliacaoExistente ? 'Editar sua avaliação' : 'Avaliar Produto' ?>
     </h3>
@@ -153,12 +169,11 @@ $media = $conn->query("
 
     <hr>
 
-    <!-- 🔥 LISTA -->
+    <!-- 🔥 LISTA DE AVALIAÇÕES -->
     <h3>Avaliações</h3>
 
     <?php while($a = $avaliacoes->fetch_assoc()): ?>
         <div style="border-bottom:1px solid #ddd; padding:10px 0;">
-
             <b><?= $a['nome'] ?></b><br>
 
             <span style="color:gold;">
@@ -167,9 +182,39 @@ $media = $conn->query("
             </span>
 
             <p><?= $a['comentario'] ?></p>
-
         </div>
     <?php endwhile; ?>
+
+    <hr>
+
+    <!-- 🔥 RELACIONADOS -->
+    <h3>Produtos Relacionados</h3>
+
+    <div style="display:flex; gap:20px; flex-wrap:wrap;">
+
+        <?php while($r = $relacionados->fetch_assoc()): ?>
+
+            <a href="produto.php?id=<?= $r['id'] ?>" style="text-decoration:none; color:inherit;">
+                
+                <div class="card" style="width:200px; text-align:center;">
+
+                    <div style="height:150px; display:flex; align-items:center; justify-content:center;">
+                        <?php if ($r['imagem']): ?>
+                            <img src="uploads/<?= $r['imagem'] ?>" style="max-width:100%; max-height:100%;">
+                        <?php endif; ?>
+                    </div>
+
+                    <b><?= $r['nome'] ?></b>
+
+                    <p>R$ <?= number_format($r['valor'], 2, ',', '.') ?></p>
+
+                </div>
+
+            </a>
+
+        <?php endwhile; ?>
+
+    </div>
 
 </div>
 

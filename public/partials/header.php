@@ -2,13 +2,13 @@
 session_start();
 require_once '../config/database.php';
 
-// 🔒 Verifica se está logado
+// 🔒 Verifica login
 if (!isset($_SESSION['cliente_id'])) {
     header("Location: login.php?erro=acesso_negado");
     exit;
 }
 
-// 🔥 BLOQUEIO: obrigar completar cadastro
+// 🔥 Bloqueio de cadastro incompleto
 if ($_SESSION['cliente_tipo'] == 'cliente') {
 
     $cliente = $conn->query("
@@ -23,6 +23,7 @@ if ($_SESSION['cliente_tipo'] == 'cliente') {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -45,10 +46,15 @@ if ($_SESSION['cliente_tipo'] == 'cliente') {
         <a href="carrinho.php">Carrinho</a>
         <a href="vendas.php">Minhas Compras</a>
 
-        <!-- 🔒 Área ADMIN -->
+        <!-- 🔒 ADMIN -->
         <?php if ($_SESSION['cliente_tipo'] == 'admin'): ?>
+
             <a href="admin_dashboard.php">Dashboard</a>
-            <a href="admin_pedidos.php">Admin Pedidos</a>
+            <a href="admin_pedidos.php">Pedidos</a>
+
+            <!-- 🔥 NOVO MENU -->
+            <a href="produtos.php">Produtos</a>
+
         <?php endif; ?>
 
         <!-- 🚪 Logout -->
