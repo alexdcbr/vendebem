@@ -2,55 +2,28 @@
 require_once '../config/database.php';
 session_start();
 
-$erro = "";
+$erro = '';
 
-// 🔹 Mensagem de acesso negado
-if (isset($_GET['erro']) && $_GET['erro'] == 'acesso_negado') {
-    $erro = "Acesso negado. Faça login.";
-}
-
-// 🔹 Processa login
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $cpf = $_POST['cpf'];
     $senha = $_POST['senha'];
 
-    // 🔹 Busca cliente
-    $sql = "SELECT * FROM clientes WHERE cpf='$cpf'";
-    $result = $conn->query($sql);
+    $user = $conn->query("
+        SELECT * FROM clientes WHERE cpf = '$cpf'
+    ")->fetch_assoc();
 
-    if ($result->num_rows > 0) {
+    if ($user && password_verify($senha, $user['senha'])) {
 
-        $cliente = $result->fetch_assoc();
+        $_SESSION['cliente_id'] = $user['id'];
+        $_SESSION['cliente_nome'] = $user['nome'];
+        $_SESSION['cliente_tipo'] = $user['tipo'];
 
-        // 🔹 Primeiro acesso (sem senha definida)
-        if (empty($cliente['senha'])) {
-            header("Location: definir_senha.php?cpf=$cpf");
-            exit;
-        }
-
-        // 🔐 Verifica senha
-        if (password_verify($senha, $cliente['senha'])) {
-
-            // 🔥 SESSÃO COMPLETA
-            $_SESSION['cliente_id'] = $cliente['id'];
-            $_SESSION['cliente_nome'] = $cliente['nome'];
-            $_SESSION['cliente_tipo'] = $cliente['tipo'];
-
-            // 🔥 ONBOARDING (cadastro incompleto)
-            if ($cliente['cadastro_completo'] == 0) {
-                header("Location: cliente_completar.php");
-            } else {
-                header("Location: home.php");
-            }
-            exit;
-
-        } else {
-            $erro = "Senha inválida.";
-        }
+        header("Location: home.php");
+        exit;
 
     } else {
-        $erro = "Cliente não encontrado.";
+        $erro = "CPF ou senha inválidos";
     }
 }
 ?>
@@ -60,36 +33,86 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <title>Login</title>
     <link rel="stylesheet" href="css/style.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        body {
+            background: #ecf0f1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            width: 350px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .login-card h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .login-card input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .login-card button {
+            width: 100%;
+            padding: 10px;
+            background: #3498db;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .login-card button:hover {
+            background: #2980b9;
+        }
+
+        .login-card a {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .erro {
+            color: red;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
+
 </head>
 <body>
 
-<div class="container">
+<div class="login-card">
 
-    <div class="card" style="max-width:400px; margin:auto; margin-top:80px;">
-        <h2>Login</h2>
+    <h2><i class="fa-solid fa-right-to-bracket"></i> Login</h2>
 
-        <?php if ($erro): ?>
-            <p style="color:red;"><?= $erro ?></p>
-        <?php endif; ?>
+    <?php if ($erro): ?>
+        <div class="erro"><?= $erro ?></div>
+    <?php endif; ?>
 
-        <form method="POST">
+    <form method="POST">
 
-            CPF:<br>
-            <input type="text" name="cpf" required><br><br>
+        <input type="text" name="cpf" placeholder="CPF" required>
 
-            Senha:<br>
-            <input type="password" name="senha" required><br><br>
+        <input type="password" name="senha" placeholder="Senha" required>
 
-            <button type="submit">Entrar</button>
+        <button type="submit">Entrar</button>
 
-        </form>
+    </form>
 
-        <hr>
-
-        <p>Não tem conta?</p>
-        <a href="register.php">Criar Conta</a>
-
-    </div>
+    <a href="register.php">Criar Conta</a>
 
 </div>
 
