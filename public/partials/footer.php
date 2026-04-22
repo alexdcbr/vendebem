@@ -1,10 +1,10 @@
 <?php if (isset($_SESSION['cliente_id'])): ?>
-    </div> <!-- content -->
-</div> <!-- layout -->
+    </div>
+</div>
 <?php endif; ?>
 
 <footer style="text-align:center; padding:15px; background:#f5f5f5;">
-    <small>© <?= date('Y') ?> Sistema de Vendas</small>
+    <small>© <?= date('Y') ?> VendeBem</small>
 </footer>
 
 <script>

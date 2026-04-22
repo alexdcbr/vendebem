@@ -2,20 +2,18 @@
 session_start();
 require_once '../config/database.php';
 
-// 🔥 PÁGINAS PÚBLICAS (SEM LOGIN)
+// 🔥 Páginas públicas
 $paginas_publicas = ['login.php', 'register.php'];
-
 $pagina_atual = basename($_SERVER['PHP_SELF']);
 
-// 🔒 Proteção (somente se NÃO for página pública)
+// 🔒 Proteção
 if (!in_array($pagina_atual, $paginas_publicas)) {
 
     if (!isset($_SESSION['cliente_id'])) {
-        header("Location: login.php?erro=acesso_negado");
+        header("Location: login.php");
         exit;
     }
 
-    // 🔥 Bloqueio cadastro incompleto
     if ($_SESSION['cliente_tipo'] == 'cliente') {
 
         $cliente = $conn->query("
@@ -35,11 +33,10 @@ if (!in_array($pagina_atual, $paginas_publicas)) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sistema de Vendas</title>
+    <title>VendeBem</title>
 
     <link rel="stylesheet" href="css/style.css">
 
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -47,8 +44,13 @@ if (!in_array($pagina_atual, $paginas_publicas)) {
 <?php if (isset($_SESSION['cliente_id'])): ?>
 
 <div class="header">
-    <h2>Sistema de Vendas</h2>
+
+    <div style="display:flex; align-items:center; gap:10px;">
+        <img src="images/logo.png" style="height:100px;">
+    </div>
+
     <span>Olá, <?= $_SESSION['cliente_nome'] ?></span>
+
 </div>
 
 <div class="layout">
@@ -60,24 +62,17 @@ if (!in_array($pagina_atual, $paginas_publicas)) {
             <i class="fa-solid fa-bars"></i>
         </div>
 
-        <h3><i class="fa-solid fa-store"></i> <span>Menu</span></h3>
-
         <a href="home.php"><i class="fa-solid fa-house"></i> <span>Home</span></a>
         <a href="loja.php"><i class="fa-solid fa-bag-shopping"></i> <span>Loja</span></a>
         <a href="carrinho.php"><i class="fa-solid fa-cart-shopping"></i> <span>Carrinho</span></a>
         <a href="vendas.php"><i class="fa-solid fa-box"></i> <span>Minhas Compras</span></a>
 
         <?php if ($_SESSION['cliente_tipo'] == 'admin'): ?>
-
             <hr>
-
-            <h3><i class="fa-solid fa-user-shield"></i> <span>Admin</span></h3>
-
             <a href="admin_dashboard.php"><i class="fa-solid fa-chart-line"></i> <span>Dashboard</span></a>
             <a href="admin_pedidos.php"><i class="fa-solid fa-clipboard-list"></i> <span>Pedidos</span></a>
             <a href="produtos.php"><i class="fa-solid fa-box-open"></i> <span>Produtos</span></a>
             <a href="categorias.php"><i class="fa-solid fa-tags"></i> <span>Categorias</span></a>
-
         <?php endif; ?>
 
         <hr>

@@ -31,11 +31,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
+    <title>Login - VendeBem</title>
     <link rel="stylesheet" href="css/style.css">
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
         body {
@@ -44,50 +41,88 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             justify-content: center;
             align-items: center;
             height: 100vh;
+            margin: 0;
         }
 
         .login-card {
             background: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            width: 350px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 40px 30px;
+            border-radius: 12px;
+            width: 420px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
         }
 
-        .login-card h2 {
-            text-align: center;
+        .logo {
             margin-bottom: 20px;
         }
 
-        .login-card input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
+        .logo img {
+            height: 200px;
         }
 
-        .login-card button {
+        .login-card h2 {
+            margin-bottom: 25px;
+        }
+
+        /* 🔥 FORM CENTRAL */
+        .form-box {
             width: 100%;
-            padding: 10px;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        /* 🔥 CORREÇÃO PRINCIPAL */
+        .form-box input,
+        .form-box button {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* INPUTS */
+        .form-box input {
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .form-box input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        /* BOTÃO */
+        .form-box button {
+            padding: 12px;
             background: #3498db;
             color: #fff;
             border: none;
+            border-radius: 6px;
+            font-size: 15px;
             cursor: pointer;
+            transition: 0.2s;
         }
 
-        .login-card button:hover {
+        .form-box button:hover {
             background: #2980b9;
         }
 
         .login-card a {
             display: block;
-            text-align: center;
-            margin-top: 10px;
+            margin-top: 15px;
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .login-card a:hover {
+            text-decoration: underline;
         }
 
         .erro {
             color: red;
-            text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
     </style>
 
@@ -96,13 +131,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <div class="login-card">
 
-    <h2><i class="fa-solid fa-right-to-bracket"></i> Login</h2>
+    <!-- 🔥 LOGO -->
+    <div class="logo">
+        <img src="images/logo-light.png">
+    </div>
+
+    <h2>Login</h2>
 
     <?php if ($erro): ?>
         <div class="erro"><?= $erro ?></div>
     <?php endif; ?>
 
-    <form method="POST">
+    <!-- 🔥 FORM PERFEITAMENTE ALINHADO -->
+    <form method="POST" class="form-box">
 
         <input type="text" name="cpf" placeholder="CPF" required>
 
